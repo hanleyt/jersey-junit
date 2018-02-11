@@ -2,5 +2,4 @@ language: java
 jdk:
   - oraclejdk8
   - oraclejdk9
-before_script:
-  - chmod a+x gradlew
+sccript: ./gradlew build
