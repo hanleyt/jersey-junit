@@ -6,7 +6,7 @@ import javax.ws.rs.client.WebTarget;
 
 import static com.google.common.truth.Truth.assertThat;
 
-class JerseyExtensionIT {
+class JerseyExtensionTest {
 
     @RegisterExtension
     JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey);

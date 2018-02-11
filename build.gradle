@@ -50,6 +50,7 @@ dependencies {
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
     testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
+    testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
 
 }
 
