@@ -63,6 +63,5 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    description = 'Generates gradlew scripts'
-    gradleVersion = '4.5'
+    gradleVersion = '4.5.1'
 }
