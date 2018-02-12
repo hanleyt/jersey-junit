@@ -1,3 +1,5 @@
+package com.github.hanleyt;
+
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;

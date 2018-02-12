@@ -1,3 +1,5 @@
+package com.github.hanleyt;
+
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
