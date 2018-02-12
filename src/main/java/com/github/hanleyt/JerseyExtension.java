@@ -10,22 +10,22 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    private final Supplier<Application> applicationSupplier;
+    private final Function<ExtensionContext, Application> applicationProvider;
     private JerseyTest jerseyTest;
 
-    public JerseyExtension(Supplier<Application> applicationSupplier) {
-        this.applicationSupplier = applicationSupplier;
+    public JerseyExtension(Function<ExtensionContext, Application> applicationProvider) {
+        this.applicationProvider = applicationProvider;
     }
 
-    private void initJerseyTest() {
+    private void initJerseyTest(ExtensionContext context) {
         jerseyTest = new JerseyTest() {
             @Override
             protected Application configure() {
-                return applicationSupplier.get();
+                return applicationProvider.apply(context);
             }
         };
     }
@@ -37,7 +37,7 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        initJerseyTest();
+        initJerseyTest(context);
         jerseyTest.setUp();
     }
 
