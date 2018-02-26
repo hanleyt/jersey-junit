@@ -17,6 +17,10 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
     private final Function<ExtensionContext, Application> applicationProvider;
     private JerseyTest jerseyTest;
 
+    private JerseyExtension() {
+        throw new IllegalStateException("JerseyExtension must be registered programmatically");
+    }
+
     public JerseyExtension(Function<ExtensionContext, Application> applicationProvider) {
         this.applicationProvider = applicationProvider;
     }
