@@ -2,6 +2,7 @@ package com.github.hanleyt;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,12 +18,25 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 
 import static com.google.common.truth.Truth.assertThat;
 
 @DisplayName("JerseyExtension should")
 class JerseyExtensionTest {
+
+    @Test
+    @DisplayName("only be registered programmatically")
+    void only_be_registered_programmatically() throws NoSuchMethodException {
+        Constructor<JerseyExtension> constructor = JerseyExtension.class.getDeclaredConstructor();
+        assertThat(Modifier.isPrivate(constructor.getModifiers())).isTrue();
+        constructor.setAccessible(true);
+        Exception exception = Assertions.assertThrows(Exception.class, constructor::newInstance);
+        assertThat(exception).hasCauseThat().isInstanceOf(IllegalStateException.class);
+        assertThat(exception).hasCauseThat().hasMessageThat().isEqualTo("JerseyExtension must be registered programmatically");
+    }
 
     @Nested
     @DisplayName("when registered and configured with a simple resource")

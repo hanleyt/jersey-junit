@@ -2,6 +2,7 @@
 A JUnit 5 extension for testing JAX-RS and Jersey-based applications using the Jersey test framework.
 
 [![Build Status](https://travis-ci.org/hanleyt/jersey-junit.svg?branch=master)](https://travis-ci.org/hanleyt/jersey-junit)
+[![codecov](https://codecov.io/gh/hanleyt/jersey-junit/branch/master/graph/badge.svg)](https://codecov.io/gh/hanleyt/jersey-junit)
 
 Usage
 ------
