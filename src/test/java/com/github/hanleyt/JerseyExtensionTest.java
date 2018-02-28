@@ -31,8 +31,7 @@ class JerseyExtensionTest {
         @RegisterExtension
         JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey);
 
-        private Application configureJersey(ExtensionContext extensionContext) {
-            assertThat(extensionContext).isNotNull();
+        private Application configureJersey() {
             return new ResourceConfig(DummyResource.class);
         }
 

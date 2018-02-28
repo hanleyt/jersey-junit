@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
@@ -23,6 +24,10 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
 
     private JerseyExtension() {
         throw new IllegalStateException("JerseyExtension must be registered programmatically");
+    }
+
+    public JerseyExtension(Supplier<Application> applicationSupplier) {
+        this.applicationProvider = (unused) -> applicationSupplier.get();
     }
 
     public JerseyExtension(Function<ExtensionContext, Application> applicationProvider) {
