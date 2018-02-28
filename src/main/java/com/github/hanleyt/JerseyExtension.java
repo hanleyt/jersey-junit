@@ -10,12 +10,16 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
+    private static final Collection<Class<?>> INJECTABLE_PARAMETER_TYPES = Arrays.asList(Client.class, WebTarget.class, URI.class);
+
     private final Function<ExtensionContext, Application> applicationProvider;
-    private JerseyTest jerseyTest;
 
     private JerseyExtension() {
         throw new IllegalStateException("JerseyExtension must be registered programmatically");
@@ -25,41 +29,47 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
         this.applicationProvider = applicationProvider;
     }
 
-    private void initJerseyTest(ExtensionContext context) {
-        jerseyTest = new JerseyTest() {
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception {
+        JerseyTest jerseyTest = initJerseyTest(context);
+        getStore(context).put(Client.class, jerseyTest.client());
+        getStore(context).put(WebTarget.class, jerseyTest.target());
+    }
+
+    private JerseyTest initJerseyTest(ExtensionContext context) throws Exception {
+        JerseyTest jerseyTest = new JerseyTest() {
             @Override
             protected Application configure() {
+                getStore(context).put(URI.class, getBaseUri());
                 return applicationProvider.apply(context);
             }
         };
+        jerseyTest.setUp();
+        getStore(context).put(JerseyTest.class, jerseyTest);
+        return jerseyTest;
     }
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        jerseyTest.tearDown();
-    }
-
-    @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
-        initJerseyTest(context);
-        jerseyTest.setUp();
+        ExtensionContext.Store store = getStore(context);
+        store.remove(JerseyTest.class, JerseyTest.class).tearDown();
+        INJECTABLE_PARAMETER_TYPES.forEach(store::remove);
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return parameterContext.getParameter().getType().equals(Client.class) || parameterContext.getParameter().getType().equals(WebTarget.class);
+        Class<?> parameterType = parameterContext.getParameter().getType();
+        return INJECTABLE_PARAMETER_TYPES.contains(parameterType);
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> parameterType = parameterContext.getParameter().getType();
-
-        if (parameterType.equals(Client.class)) {
-            return jerseyTest.client();
-        }
-        if (parameterType.equals(WebTarget.class)) {
-            return jerseyTest.target();
-        }
-        throw new IllegalStateException("Unrecognised parameter type: " + parameterType);
+        return getStore(extensionContext).get(parameterType, parameterType);
     }
+
+    public static ExtensionContext.Store getStore(ExtensionContext context) {
+        return context.getStore(ExtensionContext.Namespace.GLOBAL);
+    }
+
 }

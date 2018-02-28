@@ -18,3 +18,14 @@ This will start and stop the Jersey test container for each test.
         return new ResourceConfig(DummyResource.class);
     }
  ```
+ 
+ You can then inject the WebTarget and Client as parameters.
+ 
+  ```java
+     @Test
+     void web_target_is_injected(WebTarget target) {
+        assertThat(target).isNotNull();
+        String values = target.path("values").request().get(String.class);
+        assertThat(values).isEqualTo(DummyResource.DEFAULT_VALUES);
+     }
+  ```

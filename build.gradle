@@ -51,7 +51,7 @@ dependencies {
 
     testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
     testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
-
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
