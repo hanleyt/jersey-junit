@@ -1,5 +1,6 @@
 package com.github.hanleyt;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Assertions;
@@ -100,6 +101,89 @@ class JerseyExtensionTest {
             assertEquals(ExtensionNeededToConfigureJersey.TEST_VALUE, values);
         }
     }
+
+    @Nested
+    @DisplayName("when registered and configured with a simple resource and a client configuration function.")
+    class SimpleResourceWithClientConfigurationApp {
+    	boolean configureClientCalled = false;
+
+        @RegisterExtension
+        JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
+
+        private Application configureJersey() {
+            return new ResourceConfig(DummyResource.class);
+        }
+
+        private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
+            assertNotNull(extensionContext);
+            assertNotNull(clientConfig);
+            configureClientCalled = true;
+    		return clientConfig;
+    	}
+    	
+        @Test
+        @DisplayName("access the resource using the injected WebTarget")
+        void web_target_is_injected(WebTarget target) {
+            assertNotNull(target);
+            String values = target.path("values").request().get(String.class);
+            assertEquals(DummyResource.DEFAULT_VALUES, values);
+            assertTrue(configureClientCalled);
+        }
+
+        @Test
+        @DisplayName("access the resource using the injected Client and URI")
+        void client_is_injected(Client client, URI baseUri) {
+            assertNotNull(client);
+            String values = client.target(baseUri).path("values").request().get(String.class);
+            assertEquals(DummyResource.DEFAULT_VALUES, values);
+            assertTrue(configureClientCalled);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("when registered and configured with a resource that depends on another extension and a client configuration function.")
+    @ExtendWith(ExtensionNeededToConfigureJersey.class)
+    class ResourceWithDependenciesWithClientConfigurationApp {
+    	boolean configureClientCalled = false;
+    	
+        @RegisterExtension
+        JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
+
+        private ResourceConfig configureJersey(ExtensionContext extensionContext) {
+            assertNotNull(extensionContext);
+            String testValue = ExtensionNeededToConfigureJersey.getStore(extensionContext).get(String.class, String.class);
+            assertFalse(testValue.isEmpty());
+            ResourceConfig resourceConfig = new ResourceConfig();
+            resourceConfig.register(new DummyResource(testValue));
+            return resourceConfig;
+        }
+
+        private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
+            assertNotNull(extensionContext);
+            assertNotNull(clientConfig);
+            configureClientCalled = true;
+    		return clientConfig;
+    	}
+    	
+        @Test
+        @DisplayName("access the resource using the injected WebTarget")
+        void web_target_is_injected(WebTarget target) {
+            assertNotNull(target);
+            String values = target.path("values").request().get(String.class);
+            assertEquals(ExtensionNeededToConfigureJersey.TEST_VALUE, values);
+            assertTrue(configureClientCalled);
+        }
+
+        @Test
+        @DisplayName("access the resource using the injected Client and URI")
+        void client_is_injected(Client client, URI baseUri) {
+            assertNotNull(client);
+            String values = client.target(baseUri).path("values").request().get(String.class);
+            assertEquals(ExtensionNeededToConfigureJersey.TEST_VALUE, values);
+        }
+    }
+
 
     private static class ExtensionNeededToConfigureJersey implements BeforeEachCallback, AfterEachCallback {
 

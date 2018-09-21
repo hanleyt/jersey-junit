@@ -34,6 +34,11 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
         this.configProvider = null;
     }
 
+    public JerseyExtension(Supplier<Application> applicationSupplier, BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
+        this.applicationProvider = (unused) -> applicationSupplier.get();
+        this.configProvider = configProvider;
+    }
+
     public JerseyExtension(Function<ExtensionContext, Application> applicationProvider) {
         this.applicationProvider = applicationProvider;
         this.configProvider = null;
