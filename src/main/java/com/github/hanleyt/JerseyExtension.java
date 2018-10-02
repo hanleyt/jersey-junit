@@ -64,13 +64,13 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
                 return applicationProvider.apply(context);
             }
 
-			@Override
-			protected void configureClient(ClientConfig config) {
-				if (configProvider != null) {
-					config = configProvider.apply(context, config);
-				}
-				super.configureClient(config);
-			}
+            @Override
+            protected void configureClient(ClientConfig config) {
+                if (configProvider != null) {
+                    config = configProvider.apply(context, config);
+                }
+                super.configureClient(config);
+            }
         };
         jerseyTest.setUp();
         getStore(context).put(JerseyTest.class, jerseyTest);

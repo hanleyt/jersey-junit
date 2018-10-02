@@ -105,7 +105,7 @@ class JerseyExtensionTest {
     @Nested
     @DisplayName("when registered and configured with a simple resource and a client configuration function.")
     class SimpleResourceWithClientConfigurationApp {
-    	boolean configureClientCalled = false;
+        boolean configureClientCalled = false;
 
         @RegisterExtension
         JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
@@ -118,9 +118,9 @@ class JerseyExtensionTest {
             assertNotNull(extensionContext);
             assertNotNull(clientConfig);
             configureClientCalled = true;
-    		return clientConfig;
-    	}
-    	
+            return clientConfig;
+        }
+
         @Test
         @DisplayName("access the resource using the injected WebTarget")
         void web_target_is_injected(WebTarget target) {
@@ -145,8 +145,8 @@ class JerseyExtensionTest {
     @DisplayName("when registered and configured with a resource that depends on another extension and a client configuration function.")
     @ExtendWith(ExtensionNeededToConfigureJersey.class)
     class ResourceWithDependenciesWithClientConfigurationApp {
-    	boolean configureClientCalled = false;
-    	
+        boolean configureClientCalled = false;
+
         @RegisterExtension
         JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
 
@@ -163,9 +163,9 @@ class JerseyExtensionTest {
             assertNotNull(extensionContext);
             assertNotNull(clientConfig);
             configureClientCalled = true;
-    		return clientConfig;
-    	}
-    	
+            return clientConfig;
+        }
+
         @Test
         @DisplayName("access the resource using the injected WebTarget")
         void web_target_is_injected(WebTarget target) {
