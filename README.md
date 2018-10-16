@@ -32,6 +32,25 @@ If the ExtensionContext is required to configure the application, you can instea
         return new ResourceConfig(DummyResource.class);
     }
  ```
+
+If the client configuration needs to be customized, then you can also pass in a function that accepts an ClientConfig and returns a modified ClientConfig object.
+
+ ```java
+    @RegisterExtension
+    JerseyExtension jerseyExtension = new JerseyExtension(this::configureJersey, this::configureJerseyClient);
+
+    private Application configureJersey(ExtensionContext extensionContext) {
+        return new ResourceConfig(DummyResource.class);
+    }
+    
+    private ClientConfig configureJerseyClient(ExtensionContext extensionContext, ClientConfig clientConfig) {
+		clientConfig.connectorProvider(new ApacheConnectorProvider());
+		return clientConfig;
+	}
+	
+    
+ ```
+
  
  You can then [inject](https://junit.org/junit5/docs/current/user-guide/#writing-tests-dependency-injection) the WebTarget, Client or base URI as test method or constructor parameters.
  
