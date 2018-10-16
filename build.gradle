@@ -8,7 +8,7 @@ buildscript {
 }
 
 group 'com.github.hanleyt'
-version '1.0-SNAPSHOT'
+version '1.0.1'
 
 apply plugin: 'java'
 apply plugin: 'idea'
