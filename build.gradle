@@ -1,19 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'org.junit.platform', name: 'junit-platform-gradle-plugin', version: '1.1.0-RC1'
-    }
+plugins {
+    id 'java'
+    id 'idea'
+    id 'jacoco'
 }
 
-group 'com.github.hanleyt'
-version '1.0.1'
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.junit.platform.gradle.plugin'
-apply plugin: 'jacoco'
+group = "com.github.hanleyt"
+version = "1.0.1"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -23,37 +15,18 @@ repositories {
 }
 
 ext {
-    jerseyVersion = '2.26'
-    junit4Version = '4.12'
-    junitVintageVersion = '5.1.0-RC1'
-    junitPlatformVersion = '1.1.0-RC1'
-    junitJupiterVersion = '5.1.0-RC1'
-    log4jVersion = '2.9.0'
-}
-
-junitPlatform {
-    enableStandardTestTask true
-    logManager 'org.apache.logging.log4j.jul.LogManager'
+    jerseyVersion = "2.26"
+    junitJupiterVersion = "5.3.2"
+    log4jVersion = "2.9.0"
 }
 
 check.dependsOn jacocoTestReport
-
-jacoco {
-    toolVersion = '0.7.9'
-    applyTo junitPlatformTest
-}
 
 jacocoTestReport {
     reports {
         xml.enabled true
         csv.enabled true
         html.enabled true
-    }
-}
-
-junitPlatformTest {
-    jacoco {
-        destinationFile = file("$buildDir/jacoco/test.exec")
     }
 }
 
@@ -64,26 +37,25 @@ configurations {
 }
 
 dependencies {
-    compile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: jerseyVersion
+    compile ("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jerseyVersion")
 
-    compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    runtime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+    compile ("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    runtime ("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 
-    testCompile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jerseyVersion
+    testCompile ("org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion")
 
-    testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+    testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
     testAgent("org.jacoco:org.jacoco.agent:0.7.9:runtime")
 
-    // To use Log4J's LogManager
+    // To use Log4J"s LogManager
     testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
-    testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+    testCompile ("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    classifier = "sources"
     from sourceSets.main.allSource
 }
 
@@ -91,6 +63,6 @@ artifacts {
     archives sourcesJar
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+wrapper {
+    gradleVersion = "5.1.1"
 }
