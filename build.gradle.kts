@@ -16,11 +16,11 @@ repositories {
     mavenCentral()
 }
 
-val jerseyVersion = "2.26"
-val junitJupiterVersion = "5.3.2"
+val jerseyVersion = "2.28"
+val junitJupiterVersion = "5.4.1"
 
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.2"
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -55,7 +55,7 @@ tasks {
     }
 
     withType<Wrapper> {
-        gradleVersion = "5.1.1"
+        gradleVersion = "5.3.1"
     }
 }
 

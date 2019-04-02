@@ -2,6 +2,7 @@ package com.github.hanleyt;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 
@@ -66,6 +67,11 @@ class DummyExtensionContext implements ExtensionContext {
 
     @Override
     public Optional<Object> getTestInstance() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Optional<TestInstances> getTestInstances() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
