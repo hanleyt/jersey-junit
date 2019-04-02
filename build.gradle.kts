@@ -2,6 +2,7 @@ plugins {
     java
     idea
     jacoco
+    maven
 }
 
 group = "com.github.hanleyt"
