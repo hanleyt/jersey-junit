@@ -3,12 +3,14 @@ A [JUnit 5 extension](https://junit.org/junit5/docs/current/user-guide/#extensio
 
 [![Build Status](https://travis-ci.org/hanleyt/jersey-junit.svg?branch=master)](https://travis-ci.org/hanleyt/jersey-junit)
 [![codecov](https://codecov.io/gh/hanleyt/jersey-junit/branch/master/graph/badge.svg)](https://codecov.io/gh/hanleyt/jersey-junit)
+[![jitpack](https://jitpack.io/v/hanleyt/jersey-junit.svg)](https://jitpack.io/#hanleyt/jersey-junit)
+
 
 Set Up
 -----
 Add the following dependency to your gradle build file:
 
-```testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.0.1'```
+```testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.2.1'```
 
 Ensuring you have the jitpack repo in your list of repos:
 
