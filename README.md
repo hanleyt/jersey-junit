@@ -10,7 +10,7 @@ Set Up
 -----
 Add the following dependency to your gradle build file:
 
-```testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.2.1'```
+```testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.3.0'```
 
 Ensuring you have the jitpack repo in your list of repos:
 
