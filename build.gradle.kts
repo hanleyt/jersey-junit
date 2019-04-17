@@ -61,12 +61,11 @@ tasks {
 }
 
 dependencies {
-    compile("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jerseyVersion")
-
-    compile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-
-    testCompile("org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion")
+    compileOnly("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    compileOnly("org.glassfish.jersey.test-framework:jersey-test-framework-core:$jerseyVersion")
 
     testCompile("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+
+    testCompile("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jerseyVersion")
+    testCompile("org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion")
 }

@@ -1,16 +1,19 @@
 # Jersey-JUnit
-A [JUnit 5 extension](https://junit.org/junit5/docs/current/user-guide/#extensions) for testing JAX-RS and Jersey-based applications using the Jersey test framework.
+A zero dependency [JUnit 5 extension](https://junit.org/junit5/docs/current/user-guide/#extensions) library for testing JAX-RS and Jersey-based applications using the Jersey test framework.
 
 [![Build Status](https://travis-ci.org/hanleyt/jersey-junit.svg?branch=master)](https://travis-ci.org/hanleyt/jersey-junit)
 [![codecov](https://codecov.io/gh/hanleyt/jersey-junit/branch/master/graph/badge.svg)](https://codecov.io/gh/hanleyt/jersey-junit)
 [![jitpack](https://jitpack.io/v/hanleyt/jersey-junit.svg)](https://jitpack.io/#hanleyt/jersey-junit)
 
-
 Set Up
 -----
 Add the following dependency to your gradle build file:
 
-```testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.3.0'```
+```
+testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '1.4.0'
+// Add a test container factory, for example grizzly :
+testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: '2.28'
+```
 
 Ensuring you have the jitpack repo in your list of repos:
 
