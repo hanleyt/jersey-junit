@@ -54,13 +54,13 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
         JerseyTest jerseyTest = initJerseyTest(context);
         getStore(context).put(Client.class, jerseyTest.client());
         getStore(context).put(WebTarget.class, jerseyTest.target());
+        getStore(context).put(URI.class, jerseyTest.target().getUri());
     }
 
     private JerseyTest initJerseyTest(ExtensionContext context) throws Exception {
         JerseyTest jerseyTest = new JerseyTest() {
             @Override
             protected Application configure() {
-                getStore(context).put(URI.class, getBaseUri());
                 return applicationProvider.apply(context);
             }
 
