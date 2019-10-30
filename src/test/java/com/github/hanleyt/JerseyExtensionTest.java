@@ -2,7 +2,12 @@ package com.github.hanleyt;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
+import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.ServletDeploymentContext;
+import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -182,6 +187,38 @@ class JerseyExtensionTest {
             String values = client.target(baseUri).path("values").request().get(String.class);
             assertEquals(ExtensionNeededToConfigureJersey.TEST_VALUE, values);
         }
+    }
+
+    @Nested
+    @DisplayName("when registered and configured with a TestContainerFactory and DeploymentContext.")
+    class DeploymentContextApp {
+
+        private final TestContainerFactory testContainerFactory = new GrizzlyWebTestContainerFactory();
+        private final ResourceConfig resourceConfig = new ResourceConfig().register(new DummyResource());
+        private final DeploymentContext deploymentContext = ServletDeploymentContext.builder(resourceConfig)
+                .servlet(new ServletContainer(resourceConfig)).servletPath("foo").build();
+
+        @RegisterExtension
+        JerseyExtension jerseyExtension = new JerseyExtension(this::getTestContainerFactory, this::configureDeploymentContext, null);
+
+        TestContainerFactory getTestContainerFactory(ExtensionContext extensionContext) {
+            assertNotNull(extensionContext);
+            return testContainerFactory;
+        }
+
+        DeploymentContext configureDeploymentContext(ExtensionContext extensionContext) {
+            assertNotNull(extensionContext);
+            return deploymentContext;
+        }
+
+        @Test
+        @DisplayName("access the resource using the injected Client and URI")
+        void client_is_injected(Client client, URI baseUri) {
+            assertNotNull(client);
+            String values = client.target(baseUri).path("values").request().get(String.class);
+            assertEquals(DummyResource.DEFAULT_VALUES, values);
+        }
+
     }
 
 
