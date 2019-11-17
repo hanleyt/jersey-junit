@@ -1,7 +1,10 @@
 package com.github.hanleyt;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.spi.TestContainerException;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -22,7 +25,8 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
 
     private static final Collection<Class<?>> INJECTABLE_PARAMETER_TYPES = Arrays.asList(Client.class, WebTarget.class, URI.class);
 
-    private final Function<ExtensionContext, Application> applicationProvider;
+    private final Function<ExtensionContext, TestContainerFactory> testContainerFactoryProvider;
+    private final Function<ExtensionContext, DeploymentContext> deploymentContextProvider;
     private final BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider;
 
     private JerseyExtension() {
@@ -30,22 +34,28 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
     }
 
     public JerseyExtension(Supplier<Application> applicationSupplier) {
-        this.applicationProvider = (unused) -> applicationSupplier.get();
-        this.configProvider = null;
+        this((unused) -> applicationSupplier.get(), null);
     }
 
-    public JerseyExtension(Supplier<Application> applicationSupplier, BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
-        this.applicationProvider = (unused) -> applicationSupplier.get();
-        this.configProvider = configProvider;
+    public JerseyExtension(Supplier<Application> applicationSupplier,
+                           BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
+        this((unused) -> applicationSupplier.get(), configProvider);
     }
 
     public JerseyExtension(Function<ExtensionContext, Application> applicationProvider) {
-        this.applicationProvider = applicationProvider;
-        this.configProvider = null;
+        this(applicationProvider, null);
     }
 
-    public JerseyExtension(Function<ExtensionContext, Application> applicationProvider, BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
-        this.applicationProvider = applicationProvider;
+    public JerseyExtension(Function<ExtensionContext, Application> applicationProvider,
+                           BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
+        this(null, (context) -> DeploymentContext.builder(applicationProvider.apply(context)).build(), configProvider);
+    }
+
+    public JerseyExtension(Function<ExtensionContext, TestContainerFactory> testContainerFactoryProvider,
+                           Function<ExtensionContext, DeploymentContext> deploymentContextProvider,
+                           BiFunction<ExtensionContext, ClientConfig, ClientConfig> configProvider) {
+        this.testContainerFactoryProvider = testContainerFactoryProvider;
+        this.deploymentContextProvider = deploymentContextProvider;
         this.configProvider = configProvider;
     }
 
@@ -60,8 +70,16 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
     private JerseyTest initJerseyTest(ExtensionContext context) throws Exception {
         JerseyTest jerseyTest = new JerseyTest() {
             @Override
-            protected Application configure() {
-                return applicationProvider.apply(context);
+            protected DeploymentContext configureDeployment() {
+                return deploymentContextProvider.apply(context);
+            }
+
+            @Override
+            protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
+                if (testContainerFactoryProvider != null) {
+                    return testContainerFactoryProvider.apply(context);
+                }
+                return super.getTestContainerFactory();
             }
 
             @Override
