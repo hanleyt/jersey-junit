@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.github.hanleyt"
-version = "1.3.0"
+version = "2.1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

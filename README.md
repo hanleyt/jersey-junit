@@ -10,7 +10,7 @@ Set Up
 Add the following dependency to your gradle build file:
 
 ```
-testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '2.0.0'
+testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '2.1.0'
 // Add a test container factory, for example grizzly :
 testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: '2.28'
 ```
