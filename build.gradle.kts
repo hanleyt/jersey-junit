@@ -101,8 +101,8 @@ publishing {
 
     repositories {
         maven {
-            val nexusUsername: String by project
-            val nexusPassword: String by project
+            val nexusUsername: String? by project
+            val nexusPassword: String? by project
             credentials {
                 username = nexusUsername
                 password = nexusPassword
