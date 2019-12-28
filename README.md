@@ -3,6 +3,7 @@ A zero dependency [JUnit 5 extension](https://junit.org/junit5/docs/current/user
 
 [![Build Status](https://travis-ci.org/hanleyt/jersey-junit.svg?branch=master)](https://travis-ci.org/hanleyt/jersey-junit)
 [![codecov](https://codecov.io/gh/hanleyt/jersey-junit/branch/master/graph/badge.svg)](https://codecov.io/gh/hanleyt/jersey-junit)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.hanleyt/jersey-junit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.hanleyt/jersey-junit)
 [![jitpack](https://jitpack.io/v/hanleyt/jersey-junit.svg)](https://jitpack.io/#hanleyt/jersey-junit)
 
 Set Up
@@ -15,9 +16,13 @@ testCompile group: 'com.github.hanleyt', name: 'jersey-junit', version: '2.1.0'
 testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: '2.28'
 ```
 
-Ensuring you have the jitpack repo in your list of repos:
+The library is available from the maven central repository from version `2.1.0` onwards.
 
-```maven { url 'https://jitpack.io/' }```
+```repositories { mavenCentral() }```
+
+If you need an earlier version you can find it on the jitpack repo.
+
+```repositories { maven { url 'https://jitpack.io/' } }```
 
 Note you must be using [JUnit 5.1](https://junit.org/junit5/docs/current/release-notes/index.html#release-notes-5.1.0) or higher.
 

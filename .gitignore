@@ -133,6 +133,12 @@ Temporary Items
 build/
 out/
 
+#Ignore gradle properties file as this contains maven central passwords
+gradle.properties
+
+#Ignore secret keys file for uploading to maven central
+*.gpg
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
