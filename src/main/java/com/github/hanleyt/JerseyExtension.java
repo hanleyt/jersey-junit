@@ -3,6 +3,7 @@ package com.github.hanleyt;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -69,8 +70,10 @@ public class JerseyExtension implements BeforeEachCallback, AfterEachCallback, P
 
     private JerseyTest initJerseyTest(ExtensionContext context) throws Exception {
         JerseyTest jerseyTest = new JerseyTest() {
+
             @Override
             protected DeploymentContext configureDeployment() {
+                forceSet(TestProperties.CONTAINER_PORT, "0");
                 return deploymentContextProvider.apply(context);
             }
 
